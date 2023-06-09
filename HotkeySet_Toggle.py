@@ -1,26 +1,14 @@
 import maya.cmds as cmds
-import maya.mel as mel
 
-aTimeSlider = mel.eval('$tmpVar=$gPlayBackSlider')
-timeRange = cmds.timeControl(aTimeSlider, q=True, rangeArray=True)
+"""Change the temporary names to the names of your hotkey sets. If the hotkey set names have spaces in them
+you have to add an underscore in the script instead of the space"""
 
-startingFrame = cmds.playbackOptions(q=True, ast=True)
-endingFrame = cmds.playbackOptions(q=True, aet=True)
-
-croppedStartFrame = cmds.playbackOptions(q=True, min=True)
-croppedEndFrame = cmds.playbackOptions(q=True, max=True)
-
-
-if croppedStartFrame != startingFrame or croppedEndFrame != endingFrame:
-    cmds.playbackOptions(e=True, max=endingFrame)
-    cmds.playbackOptions(e=True, min=startingFrame)
-    
-elif timeRange[1] - timeRange[0] > 1:
-    cmds.playbackOptions(e=True, min=timeRange[0])
-    cmds.playbackOptions(e=True, max=timeRange[1] - 1)
-    selection = cmds.ls(sl=True)
-    cmds.select(cl=True)
-    cmds.select(selection)
-    
+if cmds.hotkeySet(q=True, current=True) == "Second_HotkeySet_Name":
+    cmds.hotkeySet("First_HotkeySet_Name", e=True, current=True)
+    cmds.inViewMessage(amg="First_HotkeySet_Name", pos='midCenter', fade=True, fst=1000, ck=True)
+elif cmds.hotkeySet(q=True, current=True) == "First_HotkeySet_Name":
+    cmds.inViewMessage(amg="Second_HotkeySet_Name", pos='midCenter', fade=True, fst=1000, ck=True)
+    cmds.hotkeySet("Second_HotkeySet_Name", e=True, current=True)
 else:
-    cmds.inViewMessage(amg="<hl>Select a timeline range to crop - hold Shift + Left Click drag select<hl>", pos='midCenter', fade=True, fst=4000, ck=True)
+    cmds.inViewMessage(amg="Second_HotkeySet_Name", pos='midCenter', fade=True, fst=1000, ck=True)
+    cmds.hotkeySet("Second_HotkeySet_Name", e=True, current=True)
